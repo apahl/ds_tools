@@ -37,15 +37,18 @@ def main():
 
     dedupl = ""
     sep = ""
-    if len(argv) > 3:
-        opts = options.parse(args[3:])
+    if len(sys.argv) > 3:
+        opts = options.parse(sys.argv[3:])
         dedupl = opts.get("d", "")
         sep = opts.get("s", "\n")
+        if len(sep) != 1:
+            print("Error: Separator has to be a single character.")
+            sys.exit(1)
 
     if DEBUG:
         print(in_files, out_file, dedupl, sep)
     
-    #process(in_files, outfile, dedupl)
+    # process(in_files, outfile, dedupl)
 
 main()
 
