@@ -1,0 +1,62 @@
+import sys
+import os.path as op
+
+def print_usage():
+    print("Split a large CSV file into smaller chunks.")
+    print("USAGE:")
+    print("  csv_split <in_file> <num_files>")
+    print("  in_file:   large input file to split     (Required)")
+    print("  num_files: number of files to split into (Required)")
+
+def process(in_file: str, num_splits: int):
+    base_name, ext = op.splitext(in_file)
+    # Determine the number of rows per split.
+    # It is assumed that the first row contains the headers.
+    # The first row will be repeated on the top of all split files.
+    # Count the number of rows:
+    num_rows = 0
+    f_in = open(in_file)
+    for _ in f_in:
+        num_rows += 1
+    f_in.close()
+    num_rows -= 1  # subtract the header
+    num_rows_per_chunk = int(num_rows / num_splits) + 1
+    print(f"The file contains {num_rows} rows. It will be split in {num_splits} chunks.")
+    print(f"Each chunk will contain {num_rows_per_chunk} rows. The last chunk may contain less.")
+    header = ""
+    first_row = True
+    file_ctr = 0
+    line_ctr = 0
+    f_in = open(in_file)
+    for line in f_in:
+        if first_row:
+            first_row = False
+            header = line
+            continue
+        if line_ctr == 0:
+            file_ctr += 1
+            f_out = open(f"{base_name}_{file_ctr:02d}{ext}", "w")
+            f_out.write(header)
+        line_ctr += 1
+        f_out.write(line)
+        if line_ctr >= num_rows_per_chunk:
+            line_ctr = 0
+            f_out.close()
+    if line_ctr > 0:
+        f_out.close()
+    f_in.close()
+
+def main():
+    if len(sys.argv) != 3:
+        print_usage()
+        sys.exit(1)
+    in_file = sys.argv[1]
+    num_splits = int(sys.argv[2])
+    if num_splits < 1:
+        num_splits = 1
+
+    process(in_file, num_splits)
+
+main()
+
+
