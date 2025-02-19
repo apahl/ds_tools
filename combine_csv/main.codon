@@ -1,0 +1,52 @@
+"""
+Compile with: 
+  codon build -DDEBUG=True main.codon     , or:
+  codon build -DDEBUG=False -release main.codon
+  """
+
+import sys
+import os.path as op
+from glob import glob
+
+import options
+
+def print_usage():
+    print("Combine multiple smaller CSV / TSV files into one large file.")
+    print('The files have to be given by glob and put in quotes, e.g. "files_*.csv".')
+    print('A column to deduplicate the entries by can be optionally given.')
+    print("USAGE:")
+    print('  combine_csvs "<in_files>" <out_file> [OPTIONS]')
+    print("  in_files        glob file name in quotes         (Required)")
+    print("  out_file        file name of the combined chunks (Required)")
+    print("\n  OPTIONS:")
+    print("    -d <column>   name of the column to use for deduplication")
+    print("    -s <char>     character used for column separation (default: <tab>)")
+    print('Example: combine_csv "chembl_*.tsv" chembl_combined.tsv -d InChIKey')
+
+# def process(in_files: str, out_file: str, dedupl: str = ""):
+
+
+
+def main():
+    if len(sys.argv) < 3 or len(sys.argv) > 5:
+        print("Error: Malformed commandline.")
+        print_usage()
+        sys.exit(1)
+    in_files = sys.argv[1]
+    out_file = sys.argv[2]
+
+    dedupl = ""
+    sep = ""
+    if len(argv) > 3:
+        opts = options.parse(args[3:])
+        dedupl = opts.get("d", "")
+        sep = opts.get("s", "\n")
+
+    if DEBUG:
+        print(in_files, out_file, dedupl, sep)
+    
+    #process(in_files, outfile, dedupl)
+
+main()
+
+

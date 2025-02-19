@@ -1,0 +1,13 @@
+def parse(args: List[str]) -> Dict[str, str]:
+    result = {}
+    k = ""
+    v = ""
+    for x in args:
+        if x.startswith("-"):
+            x = x.replace("-", "")
+            k = x
+        else:
+            v = x
+        if k != "":
+            result[k] = v
+    return result
